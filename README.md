@@ -27,8 +27,8 @@ Coloque aqui as ferramentas que você usou para criar seu projeto, exemplo:
 ## ✨ Funcionalidades
 
 * Login com email e senha
+* Login com conta google
 * Cadastro de usuário
-* Atualização do nome do usuário
 * Deslogar da conta no aplicativo
 
 ### Screenshots
