@@ -1,5 +1,5 @@
 import colors from '@/constants/colors';
-import { View, Text, StyleSheet, Pressable, Alert, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable, Alert, TextInput } from 'react-native';
 import { supabase } from '@/src/utils/supabase';
 import { useAuth } from '@/src/app/contexts/AuthContext';
 import { useState } from 'react';
@@ -10,27 +10,6 @@ export default function Profile() {
   const [name, setName] = useState(userData?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [loading, setLoading] = useState(false);
-
-  async function handleUpdate() {
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from('users')
-      .upsert([
-        {
-          id: user?.id,
-          name: name,
-        },
-      ]);
-
-    if (error) {
-      Alert.alert('Erro ao atualizar o usuário', error.message);
-    } else {
-      Alert.alert('Usuário atualizado com sucesso');
-      setLoading(false);
-      return;
-    }
-  }
 
   async function handleSignOut() {
     setLoading(true);
@@ -57,6 +36,8 @@ export default function Profile() {
       </View>
 
       <View style={styles.form}>
+        
+        <Image source={{ uri: user?.user_metadata.picture }} style={styles.image} />
 
         <View>
           <Text style={styles.label}>Nome completo</Text>
@@ -64,7 +45,7 @@ export default function Profile() {
             placeholder="Nome completo..."
             style={styles.input}
             value={name}
-            onChangeText={setName}
+            editable={false}
           />
         </View>
 
@@ -77,12 +58,6 @@ export default function Profile() {
             editable={false}
           />
         </View>
-
-        <Pressable style={styles.buttonUpdate} onPress={handleUpdate}>
-          <Text style={styles.buttonText}>
-            {loading ? 'Carregando...' : 'Atualizar'}
-          </Text>
-        </Pressable>
 
         <Pressable style={styles.buttonLogout} onPress={handleSignOut}>
           <Text style={styles.buttonText}>
@@ -143,16 +118,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
   },
-  buttonUpdate: {
-    backgroundColor: colors.green,
-    paddingTop: 14,
-    paddingBottom: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    borderRadius: 8,
-    marginBottom: 16,
-  },
   buttonLogout: {
     backgroundColor: colors.red,
     paddingTop: 14,
@@ -162,5 +127,12 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 8,
     marginBottom: 16,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 20,
+    alignSelf: 'center',
   },
 });

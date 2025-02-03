@@ -1,4 +1,3 @@
-import { supabase } from "@/src/utils/supabase";
 import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useState, useEffect } from "react";
 
@@ -7,7 +6,6 @@ interface UserData {
   name: string;
   created_at: string;
 }
-
 
 interface AuthContextProps {
   user: User | null;
@@ -20,26 +18,6 @@ const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (user) {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (error) {
-          console.error('Error fetching user data:', error);
-        } else {
-          setUserData(data);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [user]);
 
   function setAuth(authUser: User | null, UserData: UserData | null = null) {
     setUser(authUser);

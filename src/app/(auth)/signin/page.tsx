@@ -3,6 +3,11 @@ import { Link, router } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Pressable, Alert } from 'react-native';
 import { supabase } from '@/src/utils/supabase';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
 
 export default function Login() {
 
@@ -10,6 +15,11 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  GoogleSignin.configure({
+    scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+    webClientId: '1077774786938-utn5jrof8j0bfupqlo7980n1u3g4jdg2.apps.googleusercontent.com',
+  })
+  
   async function handleSingIn() {
     setLoading(true);
 
@@ -24,6 +34,40 @@ export default function Login() {
       return;
     }
 
+    setLoading(false);
+    router.replace('/(panel)/profile/page');
+  }
+
+  async function googleSingIn() {
+    setLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices()
+      const userInfo = await GoogleSignin.signIn()
+      console.log(userInfo)
+      if (userInfo.data?.idToken) {
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: userInfo.data.idToken,
+        })
+        console.log(error, data)
+      } else {
+        throw new Error('no ID token present!')
+      }
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('user cancelled the login flow')
+        return;
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('operation (e.g. sign in) is in progress already')
+
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('play services not available or outdated')
+        return;
+      } else {
+        console.log('some other error happened', error)
+        return;
+      }
+    }
     setLoading(false);
     router.replace('/(panel)/profile/page');
   }
@@ -66,6 +110,14 @@ export default function Login() {
             {loading ? 'Carregando...' : 'Entrar'}
           </Text>
         </Pressable>
+
+        <GoogleSigninButton
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={googleSingIn}
+          disabled={loading}
+          style={{width: '100%', marginTop: 16}}
+        />
 
         <Link href="/(auth)/signup/page" style={styles.link}>
           <Text style={{ color: colors.green, textAlign: 'center' }}>

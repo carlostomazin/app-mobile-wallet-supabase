@@ -34,8 +34,6 @@ function MainLayout() {
           router.replace('/(panel)/profile/page');
           return
         }
-
-
       }
 
       setAuth(null, null);
