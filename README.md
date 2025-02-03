@@ -26,6 +26,6 @@ Coloque aqui as ferramentas que você usou para criar seu projeto, exemplo:
 
 ### Screenshots
 
-![login](/wallet-supabase/assets/images/login.png)
-![criar conta](/wallet-supabase/assets/images/criarConta.png)
-![profile](/wallet-supabase/assets/images/profile.png)
+![login](./assets/images/login.png)
+![criar conta](./assets/images/cadastro.png)
+![profile](./assets/images/profile.png)
