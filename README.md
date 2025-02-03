@@ -24,6 +24,13 @@ Coloque aqui as ferramentas que você usou para criar seu projeto, exemplo:
 * ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 * ![Expo](https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37)
 
+## ✨ Funcionalidades
+
+* Login com email e senha
+* Cadastro de usuário
+* Atualização do nome do usuário
+* Deslogar da conta no aplicativo
+
 ### Screenshots
 
 ![login](./assets/images/login.png)
