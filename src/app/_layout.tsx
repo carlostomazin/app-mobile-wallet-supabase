@@ -31,7 +31,7 @@ function MainLayout() {
           return
         } else {
           setAuth(session.user, data);
-          router.replace('/(panel)/profile/page');
+          router.replace('/(panel)/home/page');
           return
         }
       }
@@ -49,6 +49,11 @@ function MainLayout() {
       />
 
       <Stack.Screen
+        name="(panel)/home/page"
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
         name="(auth)/signin/page"
         options={{ headerShown: false }}
       />
@@ -62,6 +67,7 @@ function MainLayout() {
         name="(panel)/profile/page"
         options={{ headerShown: false }}
       />
+
     </Stack>
   );
 }

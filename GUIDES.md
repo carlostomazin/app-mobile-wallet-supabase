@@ -17,3 +17,16 @@
 
 ### Implementação do código
 https://supabase.com/docs/guides/auth/social-login/auth-google?queryGroups=platform&platform=react-native
+
+## Comando para executar o app
+`npx expo run:android`
+
+## Dependencias
+
+https://reactnavigation.org/
+```bash
+npm install @react-navigation/native
+npx expo install react-native-screens react-native-safe-area-context
+npm install @react-navigation/bottom-tabs
+```
+

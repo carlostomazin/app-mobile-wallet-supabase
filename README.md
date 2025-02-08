@@ -24,15 +24,6 @@ Coloque aqui as ferramentas que você usou para criar seu projeto, exemplo:
 * ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 * ![Expo](https://img.shields.io/badge/expo-1C1E24?style=for-the-badge&logo=expo&logoColor=#D04A37)
 
-## ✨ Funcionalidades
+### Figma
 
-* Login com email e senha
-* Login com conta google
-* Cadastro de usuário
-* Deslogar da conta no aplicativo
-
-### Screenshots
-
-![login](./assets/images/login.png)
-![criar conta](./assets/images/cadastro.png)
-![profile](./assets/images/profile.png)
+https://www.figma.com/design/p5Cfz5Rh8wTmpemFfZvXOl/app-mobile-wallet-supabase?node-id=0-1&t=Mqvjbd0yGCBxTH04-1

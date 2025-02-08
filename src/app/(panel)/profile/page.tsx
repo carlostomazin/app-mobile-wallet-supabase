@@ -3,6 +3,8 @@ import { View, Text, Image, StyleSheet, Pressable, Alert, TextInput } from 'reac
 import { supabase } from '@/src/utils/supabase';
 import { useAuth } from '@/src/app/contexts/AuthContext';
 import { useState } from 'react';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Profile() {
   const { setAuth, user, userData } = useAuth();
@@ -27,16 +29,16 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.logoText}>
-          Dev<Text style={{ color: colors.green }}>App</Text>
-        </Text>
-        <Text style={styles.slogan}>
-          Bem-vindo de volta!
-        </Text>
+        <Pressable
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <Ionicons name="arrow-back" size={24} color={colors.white} />
+        </Pressable>
       </View>
 
       <View style={styles.form}>
-        
+
         <Image source={{ uri: user?.user_metadata.picture }} style={styles.image} />
 
         <View>
@@ -135,4 +137,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'center',
   },
+  backButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.55)',
+    alignSelf: 'flex-start',
+    padding: 8,
+    borderRadius: 8,
+    marginBottom: 8,
+  }
 });
