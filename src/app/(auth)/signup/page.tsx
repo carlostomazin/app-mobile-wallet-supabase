@@ -34,7 +34,7 @@ export default function Sigup() {
     }
 
     setLoading(false);
-    router.replace('/(auth)/signin/page');
+    router.replace('/(panel)/home/page');
 
   }
 
