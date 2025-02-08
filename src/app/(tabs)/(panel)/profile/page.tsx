@@ -29,12 +29,12 @@ export default function Profile() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <Ionicons name="arrow-back" size={24} color={colors.white} />
-        </Pressable>
+        <Text style={styles.logoText}>
+          Dev<Text style={{ color: colors.green }}>App</Text>
+        </Text>
+        <Text style={styles.slogan}>
+          O futuro da programação
+        </Text>
       </View>
 
       <View style={styles.form}>

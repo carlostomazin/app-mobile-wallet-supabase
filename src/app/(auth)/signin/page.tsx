@@ -9,6 +9,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 
+import ROUTES from '@/constants/routes'
+
 export default function Login() {
 
   const [email, setEmail] = useState('');
@@ -35,7 +37,7 @@ export default function Login() {
     }
 
     setLoading(false);
-    router.replace('/(panel)/profile/page');
+    router.replace(ROUTES.Profile);
   }
 
   async function googleSingIn() {
@@ -69,7 +71,7 @@ export default function Login() {
       }
     }
     setLoading(false);
-    router.replace('/(panel)/home/page');
+    router.replace(ROUTES.Home);
   }
 
   return (
@@ -119,7 +121,7 @@ export default function Login() {
           style={{width: '100%', marginTop: 16}}
         />
 
-        <Link href="/(auth)/signup/page" style={styles.link}>
+        <Link href={ROUTES.SignUp} style={styles.link}>
           <Text style={{ color: colors.green, textAlign: 'center' }}>
             Criar uma conta
           </Text>

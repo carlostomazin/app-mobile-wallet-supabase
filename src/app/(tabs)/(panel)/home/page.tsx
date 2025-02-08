@@ -3,6 +3,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Pressable } from 'react-native';
+// import { FAB } from 'react-native-paper'; // Componente FAB (Floating Action Button)
+
 
 export default function Home() {
   interface Transaction {
@@ -26,12 +28,6 @@ export default function Home() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Janeiro</Text>
-        <Pressable
-          style={styles.backButton}
-          onPress={() => router.push('/(panel)/profile/page')}
-        >
-          <Ionicons name="person" size={24} color={colors.white} />
-        </Pressable>
       </View>
 
       <View style={styles.balanceContainer}>
@@ -65,6 +61,12 @@ export default function Home() {
           )}
         />
       </View>
+
+      {/* <FAB
+        style={styles.fab}
+        icon="plus"  // Ícone do botão
+        onPress={() => console.log('Botão flutuante pressionado!')}
+      /> */}
     </View>
   );
 };
@@ -79,8 +81,6 @@ const styles = StyleSheet.create({
   header: {
     paddingLeft: 14,
     paddingRight: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   headerText: {

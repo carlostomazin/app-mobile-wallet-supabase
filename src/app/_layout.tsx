@@ -1,7 +1,7 @@
 import { router, Stack } from 'expo-router';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from '@/src/app/contexts/AuthContext';
 import { useEffect } from 'react';
-import { supabase } from '../utils/supabase';
+import { supabase } from '@/src/utils/supabase';
 import { Alert } from 'react-native';
 
 export default function RootLayout() {
@@ -31,7 +31,7 @@ function MainLayout() {
           return
         } else {
           setAuth(session.user, data);
-          router.replace('/(panel)/home/page');
+          router.replace('/(tabs)/(panel)/home/page');
           return
         }
       }
@@ -42,32 +42,15 @@ function MainLayout() {
   }, [])
 
   return (
-    <Stack>
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="(panel)/home/page"
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="(auth)/signin/page"
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="(auth)/signup/page"
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="(panel)/profile/page"
-        options={{ headerShown: false }}
-      />
-
+    <Stack
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(auth)/signin/page" />
+      <Stack.Screen name="(auth)/signup/page" />
     </Stack>
   );
 }
