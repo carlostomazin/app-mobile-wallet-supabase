@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     backgroundColor: "rgba(255, 255, 255, 0.9)",
-    gap: 30,
+    gap: 20,
     elevation: 10,
     borderRadius: 99,
   },

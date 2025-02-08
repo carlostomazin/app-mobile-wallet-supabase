@@ -16,12 +16,26 @@ export default function TabLayout() {
           backgroundColor: '#fff',
         }
       }}
-      tabBar={ (props) => <CustomTabBar {...props} /> }
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tabs.Screen
         name="(panel)/home/page"
         options={{
           tabBarIcon: 'home',
+        }}
+      />
+
+      <Tabs.Screen
+        name="(panel)/receita/page"
+        options={{
+          tabBarIcon: 'trending-up',
+        }}
+      />
+
+      <Tabs.Screen
+        name="(panel)/despesa/page"
+        options={{
+          tabBarIcon: 'trending-down',
         }}
       />
 
