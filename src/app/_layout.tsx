@@ -31,7 +31,7 @@ function MainLayout() {
           return
         } else {
           setAuth(session.user, data);
-          router.replace('/(tabs)/(panel)/home/page');
+          router.replace('/(tabs)/home/page');
           return
         }
       }

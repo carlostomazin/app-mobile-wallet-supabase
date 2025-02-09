@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { View, Text, StyleSheet, TextInput, Pressable, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { supabase } from '@/src/utils/supabase';
-import ROUTES from '@/constants/routes'
+import Routes from '@/constants/routes'
 
 export default function Sigup() {
 
@@ -35,7 +35,7 @@ export default function Sigup() {
     }
 
     setLoading(false);
-    router.replace(ROUTES.Home);
+    router.replace(Routes.home);
 
   }
 

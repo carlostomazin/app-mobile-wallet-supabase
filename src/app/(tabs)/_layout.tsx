@@ -1,5 +1,14 @@
 import { Tabs } from 'expo-router';
 import CustomTabBar from '@/components/CustomTabBar';
+import { Button, TouchableOpacity, View } from 'react-native';
+
+function ButtonTab() {
+  return (
+    <View>
+      <Button title="Clique aqui" onPress={() => alert("Botão pressionado!")} />
+    </View>
+  );
+}
 
 export default function TabLayout() {
 
@@ -9,38 +18,25 @@ export default function TabLayout() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: '#121212',
-
-        tabBarStyle: {
-          borderTopWidth: 0,
-          backgroundColor: '#fff',
-        }
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tabs.Screen
-        name="(panel)/home/page"
+        name="home/page"
         options={{
           tabBarIcon: 'home',
         }}
       />
 
       <Tabs.Screen
-        name="(panel)/receita/page"
+        name="transacao/page"
         options={{
-          tabBarIcon: 'trending-up',
+          tabBarIcon: 'add',
         }}
       />
 
       <Tabs.Screen
-        name="(panel)/despesa/page"
-        options={{
-          tabBarIcon: 'trending-down',
-        }}
-      />
-
-      <Tabs.Screen
-        name="(panel)/profile/page"
+        name="profile/page"
         options={{
           tabBarIcon: 'person',
         }}
