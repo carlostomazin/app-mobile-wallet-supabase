@@ -2,7 +2,7 @@ import { router, Stack } from 'expo-router';
 import { AuthProvider, useAuth } from '@/src/app/contexts/AuthContext';
 import { useEffect } from 'react';
 import { supabase } from '@/src/utils/supabase';
-import { Alert } from 'react-native';
+import { getUserById } from '@/src/utils/supabase_db';
 
 export default function RootLayout() {
   return (
@@ -20,19 +20,14 @@ function MainLayout() {
     supabase.auth.onAuthStateChange(async (event, session) => {
 
       if (session) {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
+        const user = await getUserById(session.user.id);
 
-        if (error) {
-          Alert.alert('Erro ao buscar usuário', error.message);
-          return
-        } else {
-          setAuth(session.user, data);
+        if (user) {
+          setAuth(session.user, user);
           router.replace('/(tabs)/home/page');
-          return
+          return;
+        } else {
+          console.log('Usuário não encontrado ou ocorreu um erro');
         }
       }
 

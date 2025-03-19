@@ -1,14 +1,17 @@
 import colors from '@/constants/colors';
-import { supabase } from '@/src/utils/supabase';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 import { usePathname } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, SafeAreaView, ScrollView } from 'react-native';
+import { useAuth } from '../../contexts/AuthContext';
+import { getTransactionsByUserIdAndDate, getWalletsByUserId } from '@/src/utils/supabase_db';
 
 export default function Home() {
-  const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
+  const { setAuth, user, userData } = useAuth();
+
+  const [income, setIncome] = useState<number>(0);
+  const [expense, setExpense] = useState<number>(0);
   const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -21,75 +24,55 @@ export default function Home() {
   ];
   interface Transaction {
     id: string;
-    descricao: string;
-    tipo: 'receita' | 'despesa';
-    valor: number;
-    created_at: string;
+    description: string;
+    value: number;
+    category_name: string,
+    wallet_name: string,
+    type: string
+    date: Date
   }
 
-  const fetchFinancialData = async () => {
-    try {
-      const startDate = new Date(new Date().getFullYear(), selectedMonth, 1).toISOString();
-      const endDate = new Date(new Date().getFullYear(), selectedMonth + 1, 0).toISOString();
-
-      // Fetch income (positive transactions)
-      const { data: incomeData, error: incomeError } = await supabase
-        .from('transacoes')
-        .select('valor')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .eq('tipo', 'receita')
-        .gte('created_at', startDate)
-        .lte('created_at', endDate);
-
-      if (incomeError) throw incomeError;
-
-      // Fetch expenses (negative transactions)
-      const { data: expenseData, error: expenseError } = await supabase
-        .from('transacoes')
-        .select('valor')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .eq('tipo', 'despesa')
-        .gte('created_at', startDate)
-        .lte('created_at', endDate);
-
-      if (expenseError) throw expenseError;
-
-      // Calculate totals
-      const totalIncome = incomeData?.reduce((sum, item) => sum + item.valor, 0) || 0;
-      const totalExpense = Math.abs(expenseData?.reduce((sum, item) => sum + item.valor, 0) || 0);
-
-      setIncome(totalIncome);
-      setExpense(totalExpense);
-      setBalance(totalIncome - totalExpense);
-    } catch (error) {
-      console.error('Error fetching financial data:', error);
-    }
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; // Changed order from ${year}-${day}-${month}
   };
 
   const fetchTransactions = async () => {
-    try {
-      const startDate = new Date(new Date().getFullYear(), selectedMonth, 1).toISOString();
-      const endDate = new Date(new Date().getFullYear(), selectedMonth + 1, 0).toISOString();
+    if (!user) return;
+    const startDate = formatDate(new Date(new Date().getFullYear(), selectedMonth, 1));
+    const endDate = formatDate(new Date(new Date().getFullYear(), selectedMonth + 1, 0));
+    const transactions = await getTransactionsByUserIdAndDate(user.id, startDate, endDate);
+    setTransactions(transactions);
+  };
 
-      const { data: transactionsData, error } = await supabase
-        .from('transacoes')
-        .select('*')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .gte('created_at', startDate)
-        .lte('created_at', endDate)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setTransactions(transactionsData || []);
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-    }
+  const calculateBalanceIncomeExpense = () => {
+    const result = transactions.reduce(
+      (acc, transaction) => {
+        if (transaction.type === 'income') {
+          acc.income += transaction.value;
+        } else {
+          acc.expense += transaction.value;
+        }
+        return acc;
+      },
+      { income: 0, expense: 0 }
+    );
+  
+    setIncome(result.income);
+    setExpense(Math.abs(result.expense));
+    setBalance(result.income - Math.abs(result.expense));
   };
 
   useEffect(() => {
-    fetchFinancialData();
+    calculateBalanceIncomeExpense();
     fetchTransactions();
   }, [pathname, selectedMonth]);
+
+  useEffect(() => {
+    calculateBalanceIncomeExpense();
+  }, [transactions]);
 
 
   return (
@@ -135,6 +118,7 @@ export default function Home() {
 
 
       <View style={styles.balanceContainer}>
+        <Text style={styles.incomeExpenseText}>Saldo em contas</Text>
         <Text style={styles.balance}>R$ {balance.toFixed(2)}</Text>
       </View>
 
@@ -149,29 +133,38 @@ export default function Home() {
         </View>
       </View>
 
-      <View style={styles.transactionsList}>
-        <FlatList
-          data={transactions}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.transactionItem}>
-              <View style={styles.transactionIcon} />
-              <View style={styles.transactionDetails}>
-                <Text style={styles.transactionName}>{item.descricao}</Text>
-                <Text style={styles.transactionDescription}>{item.tipo}</Text>
-              </View>
-              <Text
-                style={[
-                  styles.transactionAmount,
-                  { color: item.tipo === 'receita' ? colors.green : colors.red }
-                ]}
-              >
-                R$ {Math.abs(item.valor).toFixed(2)}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+      <SafeAreaView style={{ flex: 1 }}>
+        {/* <ScrollView style={{ flex: 1, backgroundColor: colors.white }}> */}
+        <View style={styles.body}>
+
+
+          <View style={styles.transactionsList}>
+            <Text style={styles.transactionName}>Transções recentes</Text>
+            <FlatList
+              data={transactions.slice(0, 5)}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.transactionItem}>
+                  <View style={styles.transactionIcon} />
+                  <View style={styles.transactionDetails}>
+                    <Text style={styles.transactionName}>{item.description}</Text>
+                  </View>
+                  <Text
+                    style={[
+                      styles.transactionAmount,
+                      { color: item.type === 'income' ? colors.green : colors.red }
+                    ]}
+                  >
+                    R$ {Math.abs(item.value).toFixed(2)}
+                  </Text>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+        {/* </ScrollView> */}
+      </SafeAreaView>
+
 
     </View>
   );
@@ -245,7 +238,7 @@ const styles = StyleSheet.create({
   transactionAmount: {
     fontSize: 16,
   },
-  transactionsList: {
+  body: {
     flex: 1,
     backgroundColor: colors.white,
     borderTopLeftRadius: 16,
@@ -253,6 +246,12 @@ const styles = StyleSheet.create({
     paddingTop: 24,
     paddingLeft: 14,
     paddingRight: 14,
+  },
+  transactionsList: {
+    backgroundColor: colors.white,
+    padding: 15,
+    borderRadius: 15,
+    elevation: 5
   },
   monthSelector: {
     padding: 10,

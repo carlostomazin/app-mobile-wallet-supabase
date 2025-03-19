@@ -29,7 +29,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="transacao/page"
+        name="transaction/page"
         options={{
           tabBarIcon: 'add',
         }}

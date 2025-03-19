@@ -9,7 +9,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 
-import ROUTES from '@/constants/routes'
+import Routes from '@/constants/routes'
 
 export default function Login() {
 
@@ -21,7 +21,7 @@ export default function Login() {
     scopes: ['https://www.googleapis.com/auth/drive.readonly'],
     webClientId: '1077774786938-utn5jrof8j0bfupqlo7980n1u3g4jdg2.apps.googleusercontent.com',
   })
-  
+
   async function handleSingIn() {
     setLoading(true);
 
@@ -37,7 +37,7 @@ export default function Login() {
     }
 
     setLoading(false);
-    router.replace(ROUTES.Profile);
+    router.replace(Routes.profile);
   }
 
   async function googleSingIn() {
@@ -45,13 +45,14 @@ export default function Login() {
     try {
       await GoogleSignin.hasPlayServices()
       const userInfo = await GoogleSignin.signIn()
-      console.log(userInfo)
       if (userInfo.data?.idToken) {
         const { data, error } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: userInfo.data.idToken,
         })
-        console.log(error, data)
+        if (error) {
+          console.log(error)
+        }
       } else {
         throw new Error('no ID token present!')
       }
@@ -71,7 +72,7 @@ export default function Login() {
       }
     }
     setLoading(false);
-    router.replace(ROUTES.Home);
+    router.replace(Routes.home);
   }
 
   return (
@@ -118,10 +119,10 @@ export default function Login() {
           color={GoogleSigninButton.Color.Dark}
           onPress={googleSingIn}
           disabled={loading}
-          style={{width: '100%', marginTop: 16}}
+          style={{ width: '100%', marginTop: 16 }}
         />
 
-        <Link href={ROUTES.SignUp} style={styles.link}>
+        <Link href={Routes.signUp} style={styles.link}>
           <Text style={{ color: colors.green, textAlign: 'center' }}>
             Criar uma conta
           </Text>
